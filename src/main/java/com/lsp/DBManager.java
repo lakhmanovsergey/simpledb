@@ -21,7 +21,7 @@ class DBManager {
         //this.DB_PASSWORD = "mosadm";
         this.DB_URL = "jdbc:mysql://192.168.32.102/mosDBase?useUnicode=true&characterEncoding=UTF-8";
         this.DB_USERID = "mosdbase";
-        this.DB_PASSWORD = "mosdbase";
+        this.DB_PASSWORD = "";
         this.getConnection();
     }
     public DBManager(String DB_HOST, String DB, String DB_USERID, String DB_PASSWORD) {

@@ -17,7 +17,7 @@ public class LDAPManager {
         Properties env = new Properties();
         env.setProperty(Context.INITIAL_CONTEXT_FACTORY, "com.sun.jndi.ldap.LdapCtxFactory");
         env.setProperty(Context.PROVIDER_URL, "ldap://localhost");
-        env.setProperty(Context.SECURITY_PRINCIPAL, "CN=test,OU=Domain Service Accounts,DC=tumos,DC=lan");
+        env.setProperty(Context.SECURITY_PRINCIPAL, "CN=test,OU=Domain Service Accounts,DC=xxx,DC=lan");
         env.setProperty(Context.SECURITY_CREDENTIALS, "testpass");
         ctx = new InitialDirContext(env);
         ctrls = new SearchControls();
