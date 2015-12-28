@@ -1,0 +1,58 @@
+package com.lsp;
+
+import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
+
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.io.File;
+import java.io.IOException;
+
+/**
+ * Created by lsp on 27.09.15.
+ */
+public class ParseExselGui extends JFrame {
+    private JButton getFile;
+    private JButton makeAll;
+    private JLabel label1;
+    private File inputFile;
+
+    public void setLabel1(String text) {
+        this.label1.setText(text);
+    }
+    public File getInputFile() {
+        return inputFile;
+    }
+
+
+    public ParseExselGui(String title, final ParseExsel parser) {
+        super(title);
+        //setVisible(tddrue);
+        setBounds(100, 100, 400, 300);
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        getFile = new JButton("Выбрать файл");
+        getFile.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent actionEvent) {
+                inputFile=parser.getInputFile();
+            }
+        });
+        makeAll = new JButton("Сделать все");
+        makeAll.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent actionEvent) {
+                try {
+                    parser.run(inputFile);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                } catch (InvalidFormatException e) {
+                    e.printStackTrace();
+            }
+            }
+        });
+        JPanel buttonsPanel = new JPanel(new FlowLayout());
+        //Расставляем компоненты по местам
+        buttonsPanel.add(getFile);
+        buttonsPanel.add(makeAll);
+        add(buttonsPanel, BorderLayout.SOUTH);
+    }
+}

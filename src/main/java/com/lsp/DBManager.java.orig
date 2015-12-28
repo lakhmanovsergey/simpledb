@@ -1,0 +1,101 @@
+package com.lsp;
+
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.HashMap;
+import java.util.Map;
+
+/*
+ * Created by lsp on 05.10.15.
+ */
+class DBManager {
+    private Connection connection = null;
+    private String DB_URL;
+    private String DB_USERID;
+    private String DB_PASSWORD;
+
+    public DBManager() {
+        this.DB_URL = "jdbc:mysql://localhost/mosadm";
+        this.DB_USERID = "mosadm";
+        this.DB_PASSWORD = "mosadm";
+        this.getConnection();
+    }
+    public DBManager(String DB_HOST, String DB, String DB_USERID, String DB_PASSWORD) {
+        this.DB_URL = "jdbc:mysql://l"+DB_HOST+"/"+DB;
+        this.DB_USERID = DB_USERID;
+        this.DB_PASSWORD = DB_PASSWORD;
+        this.getConnection();
+    }
+
+    private Connection getConnection()
+    {
+        if (connection == null)
+        {
+            try {
+                Class.forName("com.mysql.jdbc.Driver");
+            } catch (ClassNotFoundException e) {
+                e.printStackTrace();
+            }
+            try {
+                connection = DriverManager.getConnection(DB_URL, DB_USERID, DB_PASSWORD);
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+        return connection;
+        }
+    public Statement getStatement(){
+        Connection conn=getConnection();
+        java.sql.Statement st= null;
+        try {
+            st = conn.createStatement();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return st;
+    }
+    public void closeStatement(Statement st){
+        try {
+            st.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        closeConnection();
+    }
+    private void closeConnection() {
+        try {
+            connection.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void putMapIntoDB(Map<String, String> map,String table,String key,String value) throws SQLException {
+        Statement stm = getStatement();
+        for (Map.Entry<String, String> entry : map.entrySet()) {
+            //UPDATE Computers SET value=(Value from map) WHERE key=(Key from map);
+            //INSERT INTO Computers SET value=(Value from map) WHERE key=(Key from map);
+            int rs = stm.executeUpdate("UPDATE "
+                    + table+" SET "
+                    +value+"=\'"
+                    + entry.getValue()
+                    + "\' WHERE "
+                    +key +"=\'"
+                    + entry.getKey()
+                    + "\';");
+            if (rs == 0) {
+                stm.executeUpdate("INSERT INTO "
+                        + table + " SET "
+                        + value + "=\'"
+                        + entry.getValue()
+                        + "\',"
+                        + key + "=\'"
+                        + entry.getKey()
+                        + "\';");
+            }
+        }
+        closeStatement(stm);
+    }
+}
